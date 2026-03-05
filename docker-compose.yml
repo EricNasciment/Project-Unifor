@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+ api:
+  build: .
+  ports:
+  - "3000:3000"
+  volumes:
+  - ./src:/app/src
+  - ./.env:/app/.env
+  - ./serviceAccountKey.json:/app/serviceAccountKey.json
+  environment:
+  - NODE_ENV=development
+  command: npm run dev
