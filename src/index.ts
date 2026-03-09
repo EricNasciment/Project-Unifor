@@ -53,8 +53,8 @@ const start = async () => {
         // Escutando em 0.0.0.0 para aceitar conexões vindas da rede (outros PCs/celulares)
         await server.listen({ port, host });
 
-        console.log(🚀 Servidor rodando na porta ${port});
-        console.log(📄 Documentação local: http://localhost:${port}/docs);
+        console.log(`🚀 Servidor rodando na porta ${port}`);
+        console.log(`📄 Documentação local: http://localhost:${port}/docs`);
     } catch (err) {
         server.log.error(err);
         process.exit(1);
