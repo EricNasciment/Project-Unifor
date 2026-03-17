@@ -34,12 +34,12 @@ export default async function (fastify: FastifyInstance) {
         if (user.role !== 'professor' && user.role !== 'admin') return reply.code(403).send({ error: 'Acesso negado.' });
 
         const { studentId, disciplineId, grade } = request.body as any;
-        await db.collection('grades').add({
-            studentId,
-            disciplineId,
-            teacherId: user.uid,
-            grade,
-            createdAt: new Date().toISOString()
+        await db.collection('enrollments').add({
+            'student_id': studentId,
+            'discipline_id': disciplineId,
+            'teacher_id': user.uid,
+            'grade': grade,
+            'created_at': new Date().toISOString()
         });
         return reply.code(201).send({ message: 'Nota atribuída com sucesso!' });
     });
