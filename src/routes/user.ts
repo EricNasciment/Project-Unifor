@@ -37,7 +37,7 @@ export default async function (fastify: FastifyInstance) {
         } else {
           const matriculas = await db
             .collection("enrollments")
-            .where("student_id", "==", identification.uid)
+            .where("studentId", "==", identification.uid)
             .get();
 
           let matriculaList: any[] = [];
@@ -62,4 +62,13 @@ export default async function (fastify: FastifyInstance) {
       });
     },
   );
+
+  fastify.get("/debug/enrollments", {}, async (request, reply) => {
+    const EnrollmentsList: any[] = [];
+    const snapshot = await db.collection("enrollments").get();
+    snapshot.forEach((docs) => {
+      EnrollmentsList.push({ id: docs.id, ...docs.data() });
+    });
+    return reply.code(200).send(EnrollmentsList);
+  });
 }
