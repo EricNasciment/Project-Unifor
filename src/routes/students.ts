@@ -74,7 +74,24 @@ export default async function (fastify: FastifyInstance) {
         .collection("enrollments")
         .where("studentId", "==", user.uid)
         .get();
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+      const disciplineQuery = await db.collection("disciplines").get();
+      const disciplines: any[] = [];
+      disciplineQuery.forEach((doc) => {
+        disciplines.push({ id: doc.id, name: doc.data().name });
+      });
+
+      return snapshot.docs.map((doc) => {
+        const data = doc.data();
+
+        const discipline = disciplines.find((d) => d.id === data.disciplineId);
+
+        return {
+          id: doc.id,
+          ...data,
+          disciplineName: discipline ? discipline.name : null,
+        };
+      });
     },
   );
 }
