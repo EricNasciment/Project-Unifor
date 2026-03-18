@@ -28,14 +28,36 @@ export default async function (fastify: FastifyInstance) {
         enrollmentList.push({ matriculaId: doc.id, ...doc.data() });
       });
 
+      const disciplineQuery = await db.collection("disciplines").get();
+      const disciplines: any[] = [];
+      disciplineQuery.forEach((doc) => {
+        disciplines.push({ id: doc.id, ...doc.data() });
+      });
+
       const response: any[] = [];
-      usersQuery.forEach((user) => {
+
+      usersQuery.forEach((userDoc) => {
+        const userId = userDoc.id;
+        const userName = userDoc.data().name;
+
+        const userEnrollments = enrollmentList
+          .filter((enrollment) => enrollment.studentId === userId)
+          .map((enrollment) => {
+            const discipline = disciplines.find(
+              (d) => d.id === enrollment.disciplineId,
+            );
+
+            return {
+              ...enrollment,
+              disciplineId: enrollment.disciplineId,
+              disciplineName: discipline ? discipline.name : null, // ou outro campo
+            };
+          });
+
         response.push({
-          id: user.id,
-          name: user.data().name,
-          enrollments: enrollmentList.filter(
-            (enrollment) => enrollment.studentId == user.id,
-          ),
+          id: userId,
+          name: userName,
+          enrollments: userEnrollments,
         });
       });
 
