@@ -15,8 +15,9 @@ const server = Fastify({
 
 // Configuração do CORS
 server.register(cors, {
-    origin: '*', // Permite qualquer origem. Para produção, coloque o domínio específico do seu front-end.
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    origin: ['http://localhost:3000', 'http://localhost:5173', 'https://unifor-uni-project.web.app'], // Permite localhost e frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    credentials: true,
 });
 
 // Configuração do Swagger para gerar doc OpenAPI
